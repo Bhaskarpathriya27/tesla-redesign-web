@@ -1,44 +1,38 @@
 "use client";
-import React from "react";
+import React, { Suspense } from "react";
 import { motion } from "framer-motion";
 import { AnimatedTestimonials } from "../ui/animated-testimonials";
 
 export default function OurTeam() {
   const teamContent = [
     {
-      heading: "Fueled by Collaboration",
+      heading: "Protection Against Outages",
       quote:
-        "At Neo Mobility, every idea begins with a conversation — in breakout rooms, on whiteboards, and over shared coffee. We move fast because we move together.",
-      src: "/team/1.jpg",
+        "Powerwall keeps your home energized when the grid can’t. Paired with Solar Roof, it stores the clean energy you generate and delivers seamless backup power — day or night, outage or not.",
+      src: "/energy/solar-roof-protection.avif",
     },
     {
-      heading: "A Culture of Learning",
+      heading: "Powerwall — Energy That Works for You",
       quote:
-        "We invest in minds that question, challenge, and build. Whether in strategy rooms or technical deep dives, our team thrives on curiosity and mutual growth.",
-      src: "/team/2.jpg",
+        "Powerwall stores energy from solar or the grid, giving you control over how and when you use power. Run your home day and night, reduce reliance on the grid, and stay powered through outages or off-grid living.",
+      src: "/energy/powerwall.avif",
     },
     {
-      heading: "Engineering the Future",
+      heading: "Maximum Solar Production",
       quote:
-        "Precision meets passion in every product review and code sprint. From design to deployment, we build with intent — pushing boundaries of electric mobility.",
-      src: "/team/3.jpg",
+        "Solar Roof is engineered to capture the most energy possible — even on complex rooftops or in shifting sunlight. Durable glass tiles and architectural steel form a seamless, high-performance roof that pairs perfectly with Powerwall.",
+      src: "/energy/maximum-solar-production.avif",
     },
     {
-      heading: "Driven by Purpose",
+      heading: "Backup Protection",
       quote:
-        "It’s not just about what we build, but why. Our team shows up every day with the ambition to make cities cleaner, commutes smarter, and lives better.",
-      src: "/team/4.jpg",
-    },
-    {
-      heading: "Together, We’re Unstoppable",
-      quote:
-        "Across departments, disciplines, and desks — we share a single mission: to reimagine mobility for the modern world. And we’re just getting started.",
-      src: "/team/5.jpg",
+        "Powerwall is built for real-world conditions — from freezing temperatures to storms and flooding. When the grid goes down, Powerwall keeps essential systems running with dependable, weather-ready backup power.",
+      src: "/energy/energy-thats-there.avif",
     },
   ];
 
   return (
-    <section className="w-full min-h-screen font-sans antialiased bg-white py-28 px-6 lg:px-20">
+    <section className="w-full min-h-screen  antialiased bg-white py-32 px-6 lg:px-20">
       <motion.div
         initial="hidden"
         whileInView="visible"
@@ -46,9 +40,7 @@ export default function OurTeam() {
         variants={{
           hidden: {},
           visible: {
-            transition: {
-              staggerChildren: 0.25,
-            },
+            transition: { staggerChildren: 0.25 },
           },
         }}
         className="text-left max-w-7xl mx-auto"
@@ -58,31 +50,35 @@ export default function OurTeam() {
             hidden: { opacity: 0, y: 40 },
             visible: { opacity: 1, y: 0 },
           }}
-          className="text-5xl font-normal font-sans antialiased text-gray-900"
+          className="text-5xl font-normal antialiased text-gray-900"
         >
-          The minds behind the movement.
+          The People Powering the Future of Electric Mobility.
         </motion.h2>
+
         <motion.h2
           variants={{
             hidden: { opacity: 0, y: 40 },
             visible: { opacity: 1, y: 0 },
           }}
-          className="text-5xl font-normal font-sans antialiased text-blue-500"
+          className="text-5xl font-normal antialiased text-gray-600"
         >
-          Visionaries, engineers, and creators
+          Engineers, Designers & Innovators
         </motion.h2>
+
         <motion.h2
           variants={{
             hidden: { opacity: 0, y: 40 },
             visible: { opacity: 1, y: 0 },
           }}
-          className="text-5xl font-normal font-sans antialiased text-gray-900"
+          className="text-5xl font-normal antialiased text-gray-900"
         >
-          pushing the edge of what’s possible in electric mobility.
+          redefining what’s possible in mobility.
         </motion.h2>
       </motion.div>
 
-      <AnimatedTestimonials testimonials={teamContent} />
+      <Suspense fallback={<div className="h-[400px]" />}>
+        <AnimatedTestimonials testimonials={teamContent} autoplay />
+      </Suspense>
     </section>
   );
 }

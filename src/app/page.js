@@ -1,21 +1,32 @@
 "use client";
 
-import CTASection from "@/components/layout/CTASection";
 import FeaturesSection from "@/components/homepage/FeaturesSection";
-import HeroSection from "@/components/homepage/HeroSection";
+import NewHeroSection from "@/components/homepage/NewHeroSection";
 import ProductPage from "@/components/homepage/Product";
 import ProductIntro from "@/components/homepage/ProductIntro";
+import { useRevealer } from "@/hooks/useRevealer";
+import OurTeam from "@/components/about/OurTeam";
 
 export default function Home() {
+  useRevealer();
+
   return (
     <main>
-      <HeroSection />
+      <div className="revealer relative">
+        <span className="reveal-percentage font-pigarnos absolute bottom-6 right-6">
+          0%
+        </span>
+
+        <span className="font-pigarnos tesla-start absolute inset-0 flex items-center justify-center">
+          Engine is Starting
+        </span>
+      </div>
+
+      <NewHeroSection />
       <FeaturesSection />
-      {/* <ScrollRevealEVShowcase /> */}
-      {/* <TeslaScrollEffect /> */}
       <ProductIntro />
       <ProductPage />
-      <CTASection />
+      <OurTeam />
     </main>
   );
 }

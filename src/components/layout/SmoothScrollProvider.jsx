@@ -1,37 +1,49 @@
+// app/components/LenisProvider.jsx
 "use client";
-import { useEffect } from "react";
-import Lenis from "@studio-freight/lenis";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-export default function SmoothScrollProvider({ children }) {
-  gsap.registerPlugin(ScrollTrigger);
+import { useEffect, useRef } from "react";
+import Lenis from "lenis";
+
+export default function LenisProvider({ children, options = {} }) {
+  const lenisRef = useRef(null);
+  const rafRef = useRef(null);
+
   useEffect(() => {
-    const lenis = new Lenis({
-      duration: 1.2,
+    // default options — override by passing options prop
+    const defaultOptions = {
+      duration: 1.2, // animation duration
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // smooth ease
       smooth: true,
       direction: "vertical",
-      gestureDirection: "vertical",
-      smoothTouch: true, // ✅ enables smooth scrolling on touch devices
-      touchMultiplier: 1,
-      syncTouch: true, // ✅ syncs touch events with the scroll
-      infinite: false, // ✅ disables infinite scrolling
-    });
+      // wheelMultiplier: 1, // tweak if needed
+    };
 
-    // ✅ This is where you assign it globally
-    window.lenis = lenis;
+    // create Lenis instance if not already
+    if (!lenisRef.current) {
+      lenisRef.current = new Lenis({ ...defaultOptions, ...options });
+    }
+    const lenis = lenisRef.current;
 
+    // RAF loop required by Lenis
     const raf = (time) => {
       lenis.raf(time);
-      requestAnimationFrame(raf);
+      rafRef.current = requestAnimationFrame(raf);
     };
+    rafRef.current = requestAnimationFrame(raf);
 
-    requestAnimationFrame(raf);
-    lenis.on("scroll", ScrollTrigger.update);
+    // optional: expose to window for debugging
+    // window.__lenis = lenis;
+
     return () => {
-      lenis.destroy();
+      // cleanup RAF and destroy instance
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      if (lenisRef.current) {
+        lenisRef.current.destroy();
+        lenisRef.current = null;
+      }
     };
-  }, []);
+  }, [options]);
 
+  // Provide children directly — Lenis works on document scrolling by default.
   return <>{children}</>;
 }

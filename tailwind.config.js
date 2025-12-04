@@ -23,7 +23,10 @@ module.exports = {
         },
       },
       fontFamily: {
-        sans: ["Space Grotesk", "sans-serif"],
+        // map the variable to a Tailwind utility
+        pigarnos: ["var(--font-pigarnos)"],
+        // make your global sans use the space variable (optional)
+        sans: ["var(--font-space)", "ui-sans-serif", "system-ui"],
       },
       borderRadius: {
         lg: "var(--radius)",

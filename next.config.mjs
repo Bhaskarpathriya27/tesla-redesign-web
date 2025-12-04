@@ -1,7 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  images: {
-    domains: ["randomuser.me"],
+  cacheComponents: true,
+  experimental: {
+    viewTransition: true,
   },
 };
 

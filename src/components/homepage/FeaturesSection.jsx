@@ -3,16 +3,14 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 import {
-  BatteryCharging,
-  Gauge,
-  Clock,
-  LayoutPanelTop,
-  BarChart2,
-} from "lucide-react";
+  IconBatteryCharging,
+  IconCamera,
+  IconReload,
+} from "@tabler/icons-react";
+import { Users2, ZapIcon } from "lucide-react";
 
-gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
+gsap.registerPlugin(ScrollTrigger);
 
 export default function FeaturesSection() {
   const sectionRef = useRef(null);
@@ -21,6 +19,9 @@ export default function FeaturesSection() {
 
   useEffect(() => {
     const isMobile = window.innerWidth <= 768;
+    // desired timings (match card duration and start)
+    const CARD_ANIM_DURATION = 1.5;
+    const CARD_ANIM_START = 0.3;
 
     const ctx = gsap.context(() => {
       // Initial card setup
@@ -39,16 +40,21 @@ export default function FeaturesSection() {
 
       // Title animation with responsive scale
       const titleScale = isMobile ? 0.85 : 0.65;
-      masterTl.to(titleRef.current, { scale: 0.8, ease: "none" }, 0);
+      gsap.set(titleRef.current, { scale: 1 });
+
       masterTl.to(
         titleRef.current,
-        { scale: titleScale, ease: "power2.out" },
-        0.6
+        {
+          scale: titleScale,
+          ease: "power2.out",
+          duration: CARD_ANIM_DURATION,
+        },
+        CARD_ANIM_START // start at same time as card anims
       );
 
       // Initial positions (off-screen)
       const positions = [
-        { x: -1200, y: -500 },
+        { x: -1200, y: -600 },
         { x: 0, y: -500 },
         { x: 1000, y: -300 },
         { x: -500, y: 500 },
@@ -89,9 +95,9 @@ export default function FeaturesSection() {
             y: isMobile ? finalPositionsMobile[i].y : finalPositions[i].y,
             scale: 1,
             ease: "none",
-            duration: 1.5,
+            duration: CARD_ANIM_DURATION,
           },
-          0.3
+          CARD_ANIM_START
         );
       });
 
@@ -99,9 +105,10 @@ export default function FeaturesSection() {
       ScrollTrigger.create({
         trigger: sectionRef.current,
         start: "top top",
-        end: "+=600",
-        scrub: true,
+        end: `+${window.innerHeight * 2}px`,
         pin: true,
+        pinSpacing: true,
+        scrub: true,
         markers: false,
         onUpdate: (self) => {
           const progress = self.progress;
@@ -115,29 +122,34 @@ export default function FeaturesSection() {
 
   const cards = [
     {
-      icon: BatteryCharging,
-      title: "200+ km ARAI Range",
-      desc: "Built to outlast every route.",
+      icon: IconCamera,
+      title: "Full Self-Driving (FSD)",
+      desc: "Advanced driver assistance with continual improvement via fleet learning.",
+      note: "Computer vision + neural nets",
     },
     {
-      icon: Gauge,
-      title: "Smart Drive Modes",
-      desc: "Eco & Thunder with instant torque.",
+      icon: IconBatteryCharging,
+      title: "Long Range Powertrain",
+      desc: "Optimized battery chemistry and thermal management for extended range.",
+      note: "200+ miles real-world range",
     },
     {
-      icon: Clock,
-      title: "Fast Charging",
-      desc: "0–100% in under 2 hours.",
+      icon: ZapIcon,
+      title: "Supercharging Network",
+      desc: "Ultra-fast charging across a global grid for long-distance confidence.",
+      note: "Up to 250 kW in supported sites",
     },
     {
-      icon: LayoutPanelTop,
-      title: "Comfort Cabin",
-      desc: "Spacious. Quiet. Driver-focused.",
+      icon: IconReload,
+      title: "Over-the-Air Updates",
+      desc: "Ship new features and safety updates instantly to every car.",
+      note: "Features, smoothing & safety",
     },
     {
-      icon: BarChart2,
-      title: "Real-time Analytics",
-      desc: "Health, location & diagnostics.",
+      icon: Users2,
+      title: "Driver Safety & UX",
+      desc: "Ergonomic cabin, centralized compute and real-time diagnostics.",
+      note: "Driver monitoring & telemetry",
     },
   ];
 
@@ -149,15 +161,17 @@ export default function FeaturesSection() {
       {/* Tagline */}
       <h2
         ref={titleRef}
-        className="absolute z-20 font-bold text-[#1E293B] top-[50%] left-[50%] md:top-1/2 md:left-1/2 -translate-x-1/2 -translate-y-1/2 leading-[1] text px-4 max-w-[90%] md:max-w-none whitespace-nowrap text-center md:text-left"
+        className="absolute z-20 font-pigarnos font-bold text-[#0f172a]
+             top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
+             leading-[0.9] px-4 whitespace-nowrap text-center"
         style={{
-          fontSize: "clamp(40px, 8vw, 120px)",
-          paddingBottom: "0.5em",
+          fontSize: "clamp(48px, 8vw, 128px)",
+          letterSpacing: "0.05em",
         }}
       >
-        Where Intelligence
+        Engineering the
         <br />
-        Meets the Road
+        Future of Motion
       </h2>
 
       {/* Cards */}
@@ -167,17 +181,30 @@ export default function FeaturesSection() {
           <div
             key={i}
             ref={(el) => (cardRefs.current[i] = el)}
-            className="absolute z-30 opacity-0 w-[90%] max-w-[320px] md:min-h-[180px] min-h-[140px] rounded-2xl px-6 py-6 flex flex-col justify-start items-start backdrop-blur-lg bg-white/60 border border-slate-200 shadow-xl hover:scale-105 text-slate-800"
+            className="absolute z-30 opacity-0 w-[90%] max-w-[320px] md:min-h-[180px] min-h-[140px] rounded-2xl px-6 py-6 flex flex-col justify-between items-start
+                       backdrop-blur-md bg-white/40 border border-white/30 shadow-xl hover:scale-105"
             style={{ top: "50%", left: "50%" }}
+            aria-hidden="false"
           >
-            <div className="flex md:flex-col flex-row md:gap-2 gap-4 ">
-              <Icon size={28} className="mb-2 text-indigo-500" />
-              <div>
-                <span className="block md:text-lg font-bold">{card.title}</span>
-                <span className="block text-sm opacity-80 mt-1">
-                  {card.desc}
-                </span>
+            <div className="flex items-start gap-4 w-full">
+              {/* circular badge icon */}
+              <div className="w-12 h-12 rounded-full bg-white/90 flex items-center justify-center shadow-md border border-slate-100">
+                <Icon size={20} className="text-[#0f172a]" />
               </div>
+
+              {/* main content */}
+              <div className="flex-1">
+                <h3 className="text-lg md:text-xl font-semibold text-slate-900">
+                  {card.title}
+                </h3>
+                <p className="text-sm text-slate-700 mt-2">{card.desc}</p>
+              </div>
+            </div>
+
+            {/* accent line + note */}
+            <div className="mt-4 w-full flex items-center justify-between gap-3">
+              <div className="h-0.5 w-8 bg-gradient-to-r from-slate-900/60 to-slate-400/20 rounded" />
+              <span className="text-xs text-slate-600">{card.note}</span>
             </div>
           </div>
         );

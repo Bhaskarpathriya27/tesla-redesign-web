@@ -13,7 +13,7 @@ export default function BlogCard({
 }) {
   return (
     <Link
-      href={href}
+      href={"#"}
       className="group relative flex flex-col justify-between bg-[#f9f9f9] hover:bg-[#e6f0ff] rounded-3xl overflow-hidden transition-colors duration-500 p-4 md:p-6 min-h-[400px] shadow-sm hover:shadow-md"
     >
       {/* Image */}

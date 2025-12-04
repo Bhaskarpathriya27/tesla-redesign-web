@@ -1,15 +1,28 @@
-// app/layout.js
-// import Footer from "@/components/layout/Footer";
-import Footer from "@/components/layout/Footer";
+// src/app/layout.js
 import "./globals.css";
-import NewHeader from "@/components/layout/HeaderNew";
-import SmoothScrollProvider from "@/components/layout/SmoothScrollProvider";
-import { Urbanist } from "next/font/google";
+import localFont from "next/font/local";
+import { Space_Grotesk } from "next/font/google";
+import LenisProvider from "@/components/layout/SmoothScrollProvider";
+import Footer from "@/components/layout/Footer";
+import Header from "@/components/layout/Header";
+import TransitionProvider from "@/hooks/TransitionProvider";
 
-// ✅ Load font with weights
-const urbanist = Urbanist({
+const space = Space_Grotesk({
   subsets: ["latin"],
   weight: ["400", "600", "700"],
+  variable: "--font-space",
+  display: "swap",
+});
+
+const pigarnos = localFont({
+  src: [
+    {
+      path: "../../public/fonts/my-font.woff2",
+      weight: "400",
+      style: "normal",
+    },
+  ],
+  variable: "--font-pigarnos",
   display: "swap",
 });
 
@@ -19,14 +32,17 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
+  // add both variables to html so both CSS vars are available
   return (
-    <html lang="en">
-      <body className={`${urbanist.className} `}>
-        <SmoothScrollProvider>
-          <NewHeader />
-          {children}
-          <Footer />
-        </SmoothScrollProvider>
+    <html lang="en" className={`${space.variable} ${pigarnos.variable}`}>
+      <body className="antialiased">
+        <TransitionProvider>
+          <LenisProvider options={{ smooth: true, duration: 1.0 }}>
+            <Header />
+            {children}
+            <Footer />
+          </LenisProvider>
+        </TransitionProvider>
       </body>
     </html>
   );

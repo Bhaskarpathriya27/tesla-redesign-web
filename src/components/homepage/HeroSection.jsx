@@ -78,6 +78,7 @@ export default function HeroRevealHiCityRadial() {
       }}
       transition={{ duration: 1.5, ease: "easeInOut", delay: 0.3 }}
       className=" rounded-xl shadow-xl overflow-hidden"
+      bis_skin_checked="1"
     >
       <section className="w-full min-h-screen bg-gradient-to-b from-[#d3e9ff] to-white font-[Urbanist] flex flex-col  justify-between overflow-hidden">
         {/* Hero Main */}

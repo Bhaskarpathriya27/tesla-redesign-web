@@ -4,103 +4,129 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
-import Lottie from "lottie-react";
-import eyeBlink from "@/lottie/eye-blink.json";
-import Link from "next/link";
 gsap.registerPlugin(ScrollTrigger);
 
 const sections = [
   {
-    id: "hiRange",
-    title: "HiRange",
-    price: "From ₹3,45,000",
-    tagline: "[ Long-range electric mobility redefined ]",
-    desc: "HiRange is built for businesses that demand more. With a certified range of over 200 km on a single charge, dual ride modes, and intelligent battery management, it’s designed for intercity logistics and high-efficiency operations. The premium build quality, spacious cabin, and fast-charging capabilities make it the go-to EV for delivery fleets and enterprise transport. Designed to move farther, smarter, and tougher.",
-    thumbs: ["/img/model-y-1.avif", "/img/model-y-2.avif"],
-    image: "/img/model-y.avif",
-    url: "/product/hi-range",
+    id: "Model-S",
+    title: "Tesla Model S",
+    price: "From $66,490",
+    tagline: "[ A revolutionary electric car ]",
+    desc: "The Tesla Model S is a battery electric executive car with a liftback body style. It features a dual-motor, all-wheel drive layout, providing impressive performance and long range. Since its launch in 2012, it has set benchmarks in the electric vehicle market.",
+    thumbs: ["/img/Model-S/s1.avif", "/img/Model-S/s2.avif"],
+    image: "/img/Model-S/model s.avif",
   },
   {
-    id: "hiCity",
-    title: "HiCity",
-    price: "From ₹2,95,000",
-    tagline: "[ Compact. Agile. Built for the city. ]",
-    desc: "HiCity is engineered for India’s dense, fast-paced urban landscapes. With a lightweight frame, superior torque, and smart diagnostics, it offers unmatched maneuverability and efficiency in traffic-heavy zones. Quick to charge and even quicker to zip through city streets, HiCity is ideal for intra-city deliveries, small businesses, and modern urban mobility needs — all packed into a highly space-efficient design.",
-    thumbs: ["/img/model-x-1.avif", "/img/model-x-2.avif"],
-    image: "/img/model-x.avif",
-    url: "/product/hi-city",
+    id: "Model-Y",
+    title: "Tesla Model Y",
+    price: "From $31,490",
+    tagline: "[ A versatile electric SUV ]",
+    desc: "The Tesla Model Y is a mid-size crossover SUV with a fully electric powertrain. It offers up to 320 miles of range and advanced safety features.",
+    thumbs: ["/img/Model-Y/my1.avif", "/img/Model-Y/my2.avif"],
+    image: "/img/Model-Y/model y.avif",
   },
   {
-    id: "hiUrbania",
-    title: "HiUrbania",
-    price: "From ₹3,15,000",
-    tagline: "[ A new era of style-driven electric mobility ]",
-    desc: "HiUrbania is where design meets performance. With a futuristic aesthetic, connected ride experience, and customizable options, it’s made for urban explorers and next-gen commuters. Whether you're navigating city nights or making a style statement on the go, HiUrbania offers comfort, performance, and identity — all powered by clean electric energy. It’s not just a ride; it’s a vibe.",
-    thumbs: ["/img/model-3-1.avif", "/img/model-3-2.avif"],
-    image: "/img/model-3.avif",
-    url: "/product/hi-urbania",
+    id: "Cybertruck",
+    title: "Tesla Cybertruck",
+    price: "From $66,490",
+    tagline: "[ A futuristic electric pickup ]",
+    desc: "The Tesla Cybertruck is a full-size electric pickup truck with a unique, angular design. It offers impressive performance and capability.",
+    thumbs: ["/img/Cybertruck/cyber1.avif", "/img/Cybertruck/cyber2.avif"],
+    image: "/img/Cybertruck/cybertruck.avif",
+  },
+  {
+    id: "ModelX",
+    title: "Tesla Model X",
+    price: "From $63,990",
+    tagline: "[ A powerful electric SUV ]",
+    desc: "The Tesla Model X is a mid-size luxury crossover SUV with a fully electric powertrain and distinctive falcon-wing doors.",
+    thumbs: ["/img/Model-X/mx 1.avif", "/img/Model-X/mx 2.avif"],
+    image: "/img/Model-X/model x.avif",
   },
 ];
 
 export default function TeslaScrollEffect() {
   const containerRef = useRef(null);
   const contentRef = useRef(null);
-  const overlayImgRef1 = useRef(null);
-  const overlayImgRef2 = useRef(null);
-  const overlayInnerRef1 = useRef(null);
-  const overlayInnerRef2 = useRef(null);
+
+  // dynamic overlay refs arrays (one overlay per section after first)
+  const overlayImgRefs = useRef([]);
+  const overlayInnerRefs = useRef([]);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
       const panels = gsap.utils.toArray(".scroll-panel");
+      const panelCount = panels.length;
 
+      // ---- content scroll animation (right column)
+      const totalScrollPx = (panelCount - 1) * window.innerHeight; // amount to scroll through panels
       gsap.to(contentRef.current, {
-        yPercent: -100 * (panels.length - 1),
+        yPercent: -100 * (panelCount - 1),
         ease: "none",
         scrollTrigger: {
           trigger: containerRef.current,
           start: "top top",
-          end: `+=${panels.length * 110}%`,
-          scrub: true,
+          end: `+=${totalScrollPx}`,
+          scrub: 1.5,
+          pinSpacing: true,
           pin: true,
-          anticipatePin: 1,
         },
       });
 
-      gsap.set(overlayImgRef1.current, { yPercent: 120 });
-      gsap.set(overlayInnerRef1.current, { scale: 1.3 });
+      // ---- prepare overlays initial state
+      // overlays correspond to sections[1..n-1]
+      overlayImgRefs.current.forEach((el, i) => {
+        // set a staggered initial y offset so they are off-canvas initially
+        gsap.set(el, { yPercent: 120 + i * 100 }); // higher index = slightly further down
+        if (overlayInnerRefs.current[i]) {
+          gsap.set(overlayInnerRefs.current[i], { scale: 1.3 });
+        }
+        // performance hint
+        el.style.willChange = "transform";
+        if (overlayInnerRefs.current[i]) {
+          overlayInnerRefs.current[i].style.willChange = "transform";
+        }
+      });
 
-      gsap.set(overlayImgRef2.current, { yPercent: 240 });
-      gsap.set(overlayInnerRef2.current, { scale: 1.3 });
-
+      // ---- ScrollTrigger that maps progress to overlay reveals (dynamic)
       ScrollTrigger.create({
         trigger: containerRef.current,
-        start: "top top",
-        end: "+=250%",
+        start: "top 50%",
+        end: `+=${totalScrollPx}`,
         scrub: true,
         onUpdate: (self) => {
-          const p = self.progress;
+          const p = self.progress; // 0..1 across totalScrollPx
 
-          // 1st overlay reveal (Image 2)
-          const progress1 = Math.min(1, Math.max(0, (p - 0.2) / 0.4));
-          gsap.to(overlayImgRef1.current, {
-            yPercent: 100 - progress1 * 100,
-            ease: "none",
-          });
-          gsap.to(overlayInnerRef1.current, {
-            scale: 1.3 - progress1 * 0.2,
-            ease: "none",
-          });
+          // We'll reveal overlay for panel index j (1..panelCount-1).
+          // For each overlay (index j-1 in overlays array), compute a window centered at j/(panelCount-1)
+          const step = 1 / (panelCount - 1);
+          const half = step * 0.2; // window half-width (adjust 0.6 to widen/narrow reveal)
 
-          // 2nd overlay reveal (Image 3)
-          const progress2 = Math.min(1, Math.max(0, (p - 0.79) / 0.21));
-          gsap.to(overlayImgRef2.current, {
-            yPercent: 100 - progress2 * 100,
-            ease: "none",
-          });
-          gsap.to(overlayInnerRef2.current, {
-            scale: 1.3 - progress2 * 0.2,
-            ease: "none",
+          overlayImgRefs.current.forEach((el, idx) => {
+            // overlay corresponds to panelIndex = idx + 1
+            const panelIndex = idx + 1;
+            const center = panelIndex * step;
+            const start = Math.max(0, center - half);
+            const end = Math.min(1, center + half);
+
+            // Map p from [start, end] -> [0,1] and clamp
+            let t = gsap.utils.mapRange(start, end, 0, 1, p);
+            t = gsap.utils.clamp(0, 1, t);
+
+            // apply transforms: el yPercent from 100 -> 0 (we set larger initial offsets earlier)
+            gsap.to(el, {
+              yPercent: 100 - t * 100,
+              ease: "power1.out",
+              overwrite: true,
+            });
+            const inner = overlayInnerRefs.current[idx];
+            if (inner) {
+              gsap.to(inner, {
+                scale: 1.3 - t * 0.2,
+                ease: "power1.out",
+                overwrite: true,
+              });
+            }
           });
         },
       });
@@ -109,55 +135,65 @@ export default function TeslaScrollEffect() {
     return () => ctx.revert();
   }, []);
 
+  // helper for attaching refs in map
+  const setOverlayImgRef = (el, i) => {
+    overlayImgRefs.current[i] = el;
+  };
+  const setOverlayInnerRef = (el, i) => {
+    overlayInnerRefs.current[i] = el;
+  };
+
   return (
     <div
       ref={containerRef}
       className="relative w-full h-[100vh] overflow-hidden"
     >
-      {/* Image stack */}
-      <div className="absolute top-2 right-2 bottom-2 w-1/2 z-0 rounded-md">
-        {/* Base image */}
-        <div className="absolute inset-0 overflow-hidden z-10">
+      {/* Image stack - right side visual area */}
+      <div className="absolute top-2 right-2 bottom-2 w-1/2 z-0 rounded-md pointer-events-none">
+        {/* Base image (index 0) */}
+        <div
+          className="absolute inset-0 overflow-hidden z-10 rounded-md"
+          style={{ willChange: "transform" }}
+        >
           <Image
             src={sections[0].image}
             alt={sections[0].title}
             fill
             className="object-cover rounded-md"
+            priority // first image should be priority for LCP
           />
         </div>
 
-        {/* Overlay 1 */}
-        <div
-          className="absolute inset-0 overflow-hidden z-20 rounded-md"
-          ref={overlayImgRef1}
-        >
-          <div ref={overlayInnerRef1} className="w-full h-full relative">
-            <Image
-              src={sections[1].image}
-              alt={sections[1].title}
-              fill
-              className="object-cover"
-            />
-          </div>
-        </div>
-
-        {/* Overlay 2 */}
-        <div
-          className="absolute inset-0 overflow-hidden z-30 rounded-md"
-          ref={overlayImgRef2}
-        >
-          <div ref={overlayInnerRef2} className="w-full h-full relative">
-            <Image
-              src={sections[2].image}
-              alt={sections[2].title}
-              fill
-              className="object-cover"
-            />
-          </div>
-        </div>
+        {/* dynamically render overlays for sections[1..] */}
+        {sections.slice(1).map((s, i) => {
+          // overlay index i corresponds to section index i+1
+          return (
+            <div
+              key={s.id}
+              className="absolute inset-0 overflow-hidden z-[20]"
+              ref={(el) => setOverlayImgRef(el, i)}
+              style={{ borderRadius: 8 }}
+            >
+              <div
+                ref={(el) => setOverlayInnerRef(el, i)}
+                className="w-full h-full relative"
+                style={{ willChange: "transform" }}
+              >
+                <Image
+                  src={s.image}
+                  alt={s.title}
+                  fill
+                  className="object-cover rounded-md"
+                  // lazy load overlays for performance — they are revealed later
+                  loading="lazy"
+                />
+              </div>
+            </div>
+          );
+        })}
       </div>
 
-      {/* Right Content */}
+      {/* Right content column that scrolls up through panels */}
       <div ref={contentRef} className="relative z-40 w-1/2 h-full">
         {sections.map((sec, i) => (
           <section
@@ -187,6 +223,7 @@ export default function TeslaScrollEffect() {
                       width={230}
                       height={140}
                       className="object-cover"
+                      loading={i === 0 ? "eager" : "lazy"}
                     />
                   </div>
                 ))}
@@ -195,15 +232,6 @@ export default function TeslaScrollEffect() {
               <p className="text-[17px] text-[#333] leading-[1.65] pt-3 font-medium">
                 {sec.desc}
               </p>
-              <Link
-                href={`${sec.url}`}
-                className="w-fit mt-6 px-6 py-3 bg-black text-white rounded-full hover:scale-105 hover:bg-gray-900 transition-all duration-300 flex items-start gap-3"
-              >
-                <div className="w-6 h-6">
-                  <Lottie animationData={eyeBlink} loop autoplay />
-                </div>
-                <span>Explore</span>
-              </Link>
             </div>
           </section>
         ))}
