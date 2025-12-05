@@ -27,8 +27,35 @@ const pigarnos = localFont({
 });
 
 export const metadata = {
-  title: "Neo Mobility",
-  description: "Redefining urban mobility with electric innovation.",
+  title: "Tesla — Redefined | Futuristic Electric Mobility Experience",
+  description:
+    "A visionary redesign of Tesla’s digital experience. Explore reimagined electric vehicles, energy products, futuristic UI concepts, and immersive transitions—crafted for a cleaner, smarter, sustainable future.",
+  keywords: [
+    "Tesla redesign",
+    "Tesla UI design",
+    "Electric vehicles",
+    "EV design concept",
+    "Tesla website concept",
+    "Futuristic UI",
+    "Sustainable mobility",
+    "Tesla Powerwall",
+    "Tesla Model S",
+    "Electric mobility",
+  ],
+  openGraph: {
+    title: "Tesla — Redefined | A Futuristic Website Concept",
+    description:
+      "Experience a next-generation redesign of Tesla’s website—sleek UI, bold visuals, advanced interactions, and a forward-thinking digital identity.",
+    url: "https://tesla-concept-redesigned.vercel.app/",
+    siteName: "Tesla Redesign Concept",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Tesla — Redefined | Futuristic Electric Mobility Experience",
+    description:
+      "An immersive Tesla redesign concept featuring modern visuals, clean UI, and futuristic energy & vehicle showcases.",
+  },
 };
 
 export default function RootLayout({ children }) {
